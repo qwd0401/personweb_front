@@ -45,15 +45,10 @@
 1. **克隆项目**
 git clone https://github.com/qwd0401/personwebfont.git
 cd personwebfont
-*
-bash
 npm install
-*
-bash
 npm run dev
-*
-bash
 npm run build
+
 src/
 ├── components/ # 可复用组件
 ├── pages/ # 页面组件
@@ -62,67 +57,7 @@ src/
 ├── utils/ # 工具函数
 ├── i18n/ # 国际化配置
 └── theme/ # 主题配置
-文件：
-env
-VITE_API_URL=你的API地址
-API配置
-REACT_APP_API_URL=你的API地址
-REACT_APP_API_KEY=你的API密钥
-其他配置
-REACT_APP_GA_TRACKING_ID=Google分析跟踪ID
-typescript
-// 自定义主题示例
-const theme = createTheme({
-palette: {
-primary: {
-main: '#6200EA',
-},
-secondary: {
-main: '#B388FF',
-},
-},
-});
-typescript
-// zh-CN.json
-{
-"home": {
-"title": "你好，我是...",
-"description": "..."
-}
-}
-添加新页面
-typescript
-// src/pages/NewPage.tsx
-import { Container, Typography } from '@mui/material';
-const NewPage = () => {
-return (
-<Container maxWidth="lg">
-<Typography variant="h1">新页面</Typography>
-</Container>
-);
-};
-export default NewPage;
-使用动画组件
-typescript
-import { motion } from 'framer-motion';
-const AnimatedComponent = () => {
-return (
-<motion.div
-initial={{ opacity: 0 }}
-animate={{ opacity: 1 }}
-transition={{ duration: 0.6 }}
->
-内容
-</motion.div>
-);
-};
-添加新的API请求
-typescript
-// src/services/api.ts
-export const newApiCall = async (data: any) => {
-const response = await axios.post('/api/endpoint', data);
-return response.data;
-};
+
 
 ## 🔧 常见问题解决
 
