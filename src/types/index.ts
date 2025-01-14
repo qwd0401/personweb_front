@@ -20,4 +20,24 @@ export interface ContactForm {
   name: string;
   email: string;
   message: string;
-} 
+}
+
+export interface Message {
+  _id: string;
+  name: string;
+  email: string;
+  message: string;
+  createdAt: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  message: string;
+  token?: string;
+}
+
+export interface ApiResponse<T = any> {
+  success: boolean;
+  message: string;
+  data: T;
+}

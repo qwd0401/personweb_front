@@ -1,10 +1,10 @@
-import { useState, useEffect, ReactNode } from 'react';
-import { 
-  Box, 
-  Drawer, 
-  AppBar, 
-  Toolbar, 
-  List, 
+import { useState, useEffect, ReactNode } from "react";
+import {
+  Box,
+  Drawer,
+  AppBar,
+  Toolbar,
+  List,
   ListItemIcon,
   ListItemText,
   IconButton,
@@ -14,23 +14,24 @@ import {
   Button,
   ListItemButton,
   CircularProgress,
-  Card
-} from '@mui/material';
-import { Outlet, useNavigate, useLocation, Link } from 'react-router-dom';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import ArticleIcon from '@mui/icons-material/Article';
-import EmailIcon from '@mui/icons-material/Email';
-import LogoutIcon from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu';
-import HomeIcon from '@mui/icons-material/Home';
-import { verifyToken } from '../../services/api';
+  Card,
+} from "@mui/material";
+import { Outlet, useNavigate, useLocation, Link } from "react-router-dom";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import ArticleIcon from "@mui/icons-material/Article";
+import EmailIcon from "@mui/icons-material/Email";
+import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
+import HomeIcon from "@mui/icons-material/Home";
+import SchoolIcon from "@mui/icons-material/School";
+import { verifyToken } from "../../services/api";
 
 const DRAWER_WIDTH = 240;
 
 interface AdminCardProps {
   children: ReactNode;
-  sx?: any;  // 或者使用更具体的 MUI 类型
-  [key: string]: any;  // 允许其他 props
+  sx?: any; // 或者使用更具体的 MUI 类型
+  [key: string]: any; // 允许其他 props
 }
 
 const AdminLayout = () => {
@@ -39,20 +40,20 @@ const AdminLayout = () => {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isVerifying, setIsVerifying] = useState(true);
-  
+
   // 检查登录状态
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem('admin_token');
+      const token = localStorage.getItem("admin_token");
       if (!token) {
-        navigate('/admin/login', { replace: true });
+        navigate("/admin/login", { replace: true });
         return;
       }
 
       const isValid = await verifyToken();
       if (!isValid) {
-        localStorage.removeItem('admin_token');
-        navigate('/admin/login', { replace: true });
+        localStorage.removeItem("admin_token");
+        navigate("/admin/login", { replace: true });
       }
       setIsVerifying(false);
     };
@@ -62,12 +63,12 @@ const AdminLayout = () => {
 
   if (isVerifying) {
     return (
-      <Box 
-        sx={{ 
-          display: 'flex', 
-          justifyContent: 'center', 
-          alignItems: 'center', 
-          minHeight: '100vh' 
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
         }}
       >
         <CircularProgress />
@@ -80,14 +81,15 @@ const AdminLayout = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('admin_token');
-    navigate('/admin/login');
+    localStorage.removeItem("admin_token");
+    navigate("/admin/login");
   };
 
   const menuItems = [
-    { text: '项目管理', icon: <DashboardIcon />, path: '/admin/projects' },
-    { text: '博客管理', icon: <ArticleIcon />, path: '/admin/blogs' },
-    { text: '消息管理', icon: <EmailIcon />, path: '/admin/messages' },
+    { text: "项目管理", icon: <DashboardIcon />, path: "/admin/projects" },
+    { text: "技术文章", icon: <SchoolIcon />, path: "/admin/tech-articles" },
+    { text: "博客管理", icon: <ArticleIcon />, path: "/admin/blogs" },
+    { text: "消息管理", icon: <EmailIcon />, path: "/admin/messages" },
   ];
 
   const drawer = (
@@ -97,9 +99,9 @@ const AdminLayout = () => {
           variant="h6"
           sx={{
             fontWeight: 700,
-            background: 'linear-gradient(135deg, #6200EA 0%, #B388FF 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            background: "linear-gradient(135deg, #6200EA 0%, #B388FF 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
           }}
         >
           管理后台
@@ -116,22 +118,20 @@ const AdminLayout = () => {
               borderRadius: 2,
               mx: 1,
               mb: 1,
-              cursor: 'pointer',
-              '&.Mui-selected': {
-                bgcolor: 'primary.main',
-                color: 'white',
-                '& .MuiListItemIcon-root': {
-                  color: 'white',
+              cursor: "pointer",
+              "&.Mui-selected": {
+                bgcolor: "primary.main",
+                color: "white",
+                "& .MuiListItemIcon-root": {
+                  color: "white",
                 },
-                '&:hover': {
-                  bgcolor: 'primary.dark',
+                "&:hover": {
+                  bgcolor: "primary.dark",
                 },
               },
             }}
           >
-            <ListItemIcon sx={{ minWidth: 40 }}>
-              {item.icon}
-            </ListItemIcon>
+            <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
             <ListItemText primary={item.text} />
           </ListItemButton>
         ))}
@@ -140,13 +140,13 @@ const AdminLayout = () => {
   );
 
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box sx={{ display: "flex" }}>
       <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
           ml: { sm: `${DRAWER_WIDTH}px` },
-          bgcolor: 'background.paper',
+          bgcolor: "background.paper",
           borderBottom: `1px solid ${theme.palette.divider}`,
         }}
         elevation={0}
@@ -156,7 +156,7 @@ const AdminLayout = () => {
             color="inherit"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: 'none' } }}
+            sx={{ mr: 2, display: { sm: "none" } }}
           >
             <MenuIcon />
           </IconButton>
@@ -167,12 +167,12 @@ const AdminLayout = () => {
             startIcon={<HomeIcon />}
             sx={{
               mr: 2,
-              color: 'text.primary',
-              '&:hover': {
-                bgcolor: 'action.hover',
-                transform: 'translateY(-2px)',
+              color: "text.primary",
+              "&:hover": {
+                bgcolor: "action.hover",
+                transform: "translateY(-2px)",
               },
-              transition: 'all 0.2s',
+              transition: "all 0.2s",
             }}
           >
             返回主页
@@ -181,7 +181,7 @@ const AdminLayout = () => {
             <Button
               onClick={handleLogout}
               startIcon={<LogoutIcon />}
-              sx={{ color: 'text.primary' }}
+              sx={{ color: "text.primary" }}
             >
               退出
             </Button>
@@ -199,11 +199,11 @@ const AdminLayout = () => {
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
           sx={{
-            display: { xs: 'block', sm: 'none' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
+            display: { xs: "block", sm: "none" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
               width: DRAWER_WIDTH,
-              bgcolor: 'background.paper',
+              bgcolor: "background.paper",
               borderRight: `1px solid ${theme.palette.divider}`,
             },
           }}
@@ -213,11 +213,11 @@ const AdminLayout = () => {
         <Drawer
           variant="permanent"
           sx={{
-            display: { xs: 'none', sm: 'block' },
-            '& .MuiDrawer-paper': { 
-              boxSizing: 'border-box', 
+            display: { xs: "none", sm: "block" },
+            "& .MuiDrawer-paper": {
+              boxSizing: "border-box",
               width: DRAWER_WIDTH,
-              bgcolor: 'background.paper',
+              bgcolor: "background.paper",
               borderRight: `1px solid ${theme.palette.divider}`,
             },
           }}
@@ -233,18 +233,19 @@ const AdminLayout = () => {
           flexGrow: 1,
           p: 3,
           width: { sm: `calc(100% - ${DRAWER_WIDTH}px)` },
-          minHeight: '100vh',
-          bgcolor: 'background.default',
-          background: theme.palette.mode === 'dark'
-            ? 'linear-gradient(to bottom right, #1a1a1a, #2d2d2d)'
-            : 'linear-gradient(to bottom right, #f8f9fa, #ffffff)',
+          minHeight: "100vh",
+          bgcolor: "background.default",
+          background:
+            theme.palette.mode === "dark"
+              ? "linear-gradient(to bottom right, #1a1a1a, #2d2d2d)"
+              : "linear-gradient(to bottom right, #f8f9fa, #ffffff)",
         }}
       >
         <Toolbar />
         <Box
           sx={{
             maxWidth: 1200,
-            mx: 'auto',
+            mx: "auto",
             borderRadius: 4,
             p: { xs: 2, sm: 3 },
           }}
@@ -261,25 +262,26 @@ export const AdminCard = ({ children, ...props }: AdminCardProps) => (
     elevation={0}
     {...props}
     sx={{
-      border: '1px solid',
-      borderColor: 'divider',
+      border: "1px solid",
+      borderColor: "divider",
       borderRadius: 2,
-      bgcolor: 'background.paper',
-      transition: 'all 0.3s ease',
-      '&:hover': {
-        borderColor: 'primary.main',
-        transform: 'translateY(-2px)',
-        boxShadow: (theme) => `0 4px 20px ${
-          theme.palette.mode === 'dark' 
-            ? 'rgba(0,0,0,0.4)' 
-            : 'rgba(0,0,0,0.1)'
-        }`,
+      bgcolor: "background.paper",
+      transition: "all 0.3s ease",
+      "&:hover": {
+        borderColor: "primary.main",
+        transform: "translateY(-2px)",
+        boxShadow: (theme) =>
+          `0 4px 20px ${
+            theme.palette.mode === "dark"
+              ? "rgba(0,0,0,0.4)"
+              : "rgba(0,0,0,0.1)"
+          }`,
       },
-      ...props.sx
+      ...props.sx,
     }}
   >
     {children}
   </Card>
 );
 
-export default AdminLayout; 
+export default AdminLayout;

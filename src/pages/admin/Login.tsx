@@ -1,62 +1,64 @@
-import { useState, useEffect } from 'react';
-import { 
-  Box, 
-  Card, 
-  TextField, 
-  Button, 
-  Typography, 
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Card,
+  TextField,
+  Button,
+  Typography,
   Alert,
   Container,
   CircularProgress,
   InputAdornment,
-  IconButton
-} from '@mui/material';
-import { useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { adminLogin } from '../../services/api';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+  IconButton,
+  Stack,
+} from "@mui/material";
+import { useNavigate, Link } from "react-router-dom";
+import { motion } from "framer-motion";
+import { adminLogin, verifyToken } from "../../services/api";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import HomeIcon from "@mui/icons-material/Home";
 
 const Login = () => {
   const navigate = useNavigate();
   const [credentials, setCredentials] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   // 检查是否已登录
   useEffect(() => {
-    const token = localStorage.getItem('admin_token');
+    const token = localStorage.getItem("admin_token");
     if (token) {
-      navigate('/admin/projects');
+      navigate("/admin/projects");
     }
   }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
 
     try {
-      console.log('Submitting credentials:', credentials);
+      console.log("Submitting credentials:", credentials);
       const response = await adminLogin(credentials);
-      console.log('Login response:', response);
+      console.log("Login response:", response);
 
       if (response.success) {
-        const token = localStorage.getItem('admin_token');
+        const token = localStorage.getItem("admin_token");
         if (!token) {
-          throw new Error('No token saved after login');
+          throw new Error("No token saved after login");
         }
-        navigate('/admin/projects', { replace: true });
+        navigate("/admin/projects", { replace: true });
       } else {
-        setError(response.message || '登录失败');
+        setError(response.message || "登录失败");
       }
     } catch (err) {
-      console.error('Login error:', err);
-      setError('登录失败，请稍后重试');
+      console.error("Login error:", err);
+      setError("登录失败，请稍后重试");
     } finally {
       setLoading(false);
     }
@@ -64,12 +66,37 @@ const Login = () => {
 
   return (
     <Container maxWidth="sm">
+      <Button
+        component={Link}
+        to="/"
+        startIcon={<HomeIcon />}
+        sx={{
+          position: "fixed",
+          top: 24,
+          right: 24,
+          color: "text.secondary",
+          bgcolor: "background.paper",
+          boxShadow: 1,
+          borderRadius: 2,
+          px: 2,
+          py: 1,
+          "&:hover": {
+            color: "primary.main",
+            transform: "translateY(-2px)",
+            boxShadow: 2,
+          },
+          transition: "all 0.2s",
+        }}
+      >
+        主页
+      </Button>
+
       <Box
         sx={{
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          minHeight: "100vh",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Card
@@ -79,7 +106,7 @@ const Login = () => {
           transition={{ duration: 0.6 }}
           sx={{
             p: 4,
-            width: '100%',
+            width: "100%",
             maxWidth: 400,
             borderRadius: 3,
           }}
@@ -90,9 +117,9 @@ const Login = () => {
             sx={{
               mb: 4,
               fontWeight: 700,
-              background: 'linear-gradient(135deg, #6200EA 0%, #B388FF 100%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              background: "linear-gradient(135deg, #6200EA 0%, #B388FF 100%)",
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
             }}
           >
             管理员登录
@@ -109,17 +136,21 @@ const Login = () => {
               fullWidth
               label="用户名"
               value={credentials.username}
-              onChange={(e) => setCredentials({ ...credentials, username: e.target.value })}
+              onChange={(e) =>
+                setCredentials({ ...credentials, username: e.target.value })
+              }
               required
               disabled={loading}
               sx={{ mb: 2 }}
             />
             <TextField
               fullWidth
-              type={showPassword ? 'text' : 'password'}
+              type={showPassword ? "text" : "password"}
               label="密码"
               value={credentials.password}
-              onChange={(e) => setCredentials({ ...credentials, password: e.target.value })}
+              onChange={(e) =>
+                setCredentials({ ...credentials, password: e.target.value })
+              }
               required
               disabled={loading}
               InputProps={{
@@ -143,16 +174,16 @@ const Login = () => {
               disabled={loading}
               sx={{
                 py: 1.5,
-                fontSize: '1rem',
+                fontSize: "1rem",
               }}
             >
               {loading ? (
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
                   <CircularProgress size={20} sx={{ mr: 1 }} />
                   登录中...
                 </Box>
               ) : (
-                '登录'
+                "登录"
               )}
             </Button>
           </Box>
@@ -162,4 +193,4 @@ const Login = () => {
   );
 };
 
-export default Login; 
+export default Login;

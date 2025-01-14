@@ -1,132 +1,78 @@
-import axios from 'axios';
-import { Project, Blog, ContactForm } from '../types';
+import axios from "axios";
+import { LoginResponse, ApiResponse, Message } from "../types";
 
-const API_BASE_URL = 'https://xnwdwpypqvgr.sealoshzh.site/api';
-
-const axiosInstance = axios.create({
-  baseURL: API_BASE_URL,
+const api = axios.create({
+  baseURL: "http://localhost:3000",
+  timeout: 10000,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
-  withCredentials: true
 });
 
-// 添加请求拦截器
-axiosInstance.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('admin_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// 请求拦截器 - 添加 token
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("admin_token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
   }
-);
+  return config;
+});
 
-// 添加响应拦截器
-axiosInstance.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('admin_token');
-      window.location.href = '/admin/login';
-    }
-    return Promise.reject(error);
-  }
-);
+// Projects API
+export const getProjects = () =>
+  api.get("/api/projects").then((res) => res.data);
+export const adminCreateProject = (project: any) =>
+  api.post("/api/admin/projects", project).then((res) => res.data);
+export const adminUpdateProject = (id: string, project: any) =>
+  api.put(`/api/admin/projects/${id}`, project).then((res) => res.data);
+export const adminDeleteProject = (id: string) =>
+  api.delete(`/api/admin/projects/${id}`).then((res) => res.data);
 
-// 公开接口
-export const getProjects = async (): Promise<Project[]> => {
-  const response = await axiosInstance.get('/projects');
-  return response.data as Project[];
-};
+// Blogs API
+export const getBlogs = () => api.get("/api/blogs").then((res) => res.data);
+export const adminCreateBlog = (blog: any) =>
+  api.post("/api/admin/blogs", blog).then((res) => res.data);
+export const adminUpdateBlog = (id: string, blog: any) =>
+  api.put(`/api/admin/blogs/${id}`, blog).then((res) => res.data);
+export const adminDeleteBlog = (id: string) =>
+  api.delete(`/api/admin/blogs/${id}`).then((res) => res.data);
 
-export const getBlogs = async (): Promise<Blog[]> => {
-  const response = await axiosInstance.get('/blogs');
-  return response.data as Blog[];
-};
+// Messages API
+export const sendContactMessage = (message: any): Promise<ApiResponse<any>> =>
+  api.post("/api/messages", message).then((res) => res.data);
+export const adminGetMessages = (): Promise<ApiResponse<Message[]>> =>
+  api.get("/api/admin/messages").then((res) => res.data);
 
-export const sendContactMessage = async (data: ContactForm): Promise<{ message: string }> => {
-  const response = await axiosInstance.post('/contact', data);
-  return response.data as { message: string };
-};
+// Auth API
+export const verifyToken = () =>
+  api
+    .get("/api/admin/verify-token")
+    .then(() => true)
+    .catch(() => false);
 
-// 管理员接口
-export const adminLogin = async (credentials: { username: string; password: string }) => {
+export const adminLogin = async (credentials: {
+  username: string;
+  password: string;
+}): Promise<LoginResponse> => {
   try {
-    const response = await axiosInstance.post('/admin/login', credentials);
-    console.log('Login response:', response.data);
-    
-    if (response.data.success) {
-      if (!response.data.token) {
-        throw new Error('No token received');
-      }
-      // 保存 token 到 localStorage
-      localStorage.setItem('admin_token', response.data.token);
-      // 设置 axios 默认 header
-      axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+    const response = await api.post("/api/admin/login", credentials);
+    if (response.data.token) {
+      localStorage.setItem("admin_token", response.data.token);
       return {
         success: true,
-        message: '登录成功'
+        message: "登录成功",
       };
     }
-    
     return {
       success: false,
-      message: response.data.message || '登录失败'
+      message: response.data.message || "登录失败",
     };
   } catch (error: any) {
-    console.error('Login error:', error);
     return {
       success: false,
-      message: error.response?.data?.message || '登录失败，请稍后重试'
+      message: error.response?.data?.message || "登录失败，请稍后重试",
     };
   }
 };
 
-// 添加 token 验证接口
-export const verifyToken = async () => {
-  try {
-    const response = await axiosInstance.get('/admin/verify-token');
-    return response.data.success;
-  } catch (error) {
-    return false;
-  }
-};
-
-export const adminCreateProject = async (project: Project) => {
-  const response = await axiosInstance.post('/admin/projects', project);
-  return response.data;
-};
-
-export const adminUpdateProject = async (id: string, project: Partial<Project>) => {
-  const response = await axiosInstance.put(`/admin/projects/${id}`, project);
-  return response.data;
-};
-
-export const adminDeleteProject = async (id: string) => {
-  const response = await axiosInstance.delete(`/admin/projects/${id}`);
-  return response.data;
-};
-
-export const adminCreateBlog = async (blog: Blog) => {
-  const response = await axiosInstance.post('/admin/blogs', blog);
-  return response.data;
-};
-
-export const adminUpdateBlog = async (id: string, blog: Partial<Blog>) => {
-  const response = await axiosInstance.put(`/admin/blogs/${id}`, blog);
-  return response.data;
-};
-
-export const adminDeleteBlog = async (id: string) => {
-  const response = await axiosInstance.delete(`/admin/blogs/${id}`);
-  return response.data;
-};
-
-export const adminGetMessages = async () => {
-  const response = await axiosInstance.get('/admin/messages');
-  return response.data;
-}; 
+export default api;

@@ -1,5 +1,5 @@
 // Contact.tsx - 联系页面组件
-import { useState } from 'react';
+import { useState } from "react";
 import {
   Container,
   Typography,
@@ -11,21 +11,29 @@ import {
   Paper,
   CircularProgress,
   Grid,
-} from '@mui/material';
-import { motion } from 'framer-motion'; // 动画库
-import SendIcon from '@mui/icons-material/Send';
-import EmailIcon from '@mui/icons-material/Email';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import PhoneIcon from '@mui/icons-material/Phone';
-import { sendContactMessage } from '../services/api';
-import { ContactForm } from '../types';
+} from "@mui/material";
+import { motion } from "framer-motion"; // 动画库
+import SendIcon from "@mui/icons-material/Send";
+import EmailIcon from "@mui/icons-material/Email";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import PhoneIcon from "@mui/icons-material/Phone";
+import { sendContactMessage } from "../services/api";
+import { ContactForm } from "../types";
 
 // 联系信息卡片组件
-const ContactInfo = ({ icon, title, content }: { icon: React.ReactNode; title: string; content: string }) => (
+const ContactInfo = ({
+  icon,
+  title,
+  content,
+}: {
+  icon: React.ReactNode;
+  title: string;
+  content: string;
+}) => (
   <Box
     sx={{
-      display: 'flex',
-      alignItems: 'center',
+      display: "flex",
+      alignItems: "center",
       mb: 3,
     }}
   >
@@ -35,18 +43,20 @@ const ContactInfo = ({ icon, title, content }: { icon: React.ReactNode; title: s
         width: 48,
         height: 48,
         borderRadius: 2,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         // 渐变背景
-        background: 'linear-gradient(135deg, rgba(98, 0, 234, 0.08) 0%, rgba(179, 136, 255, 0.08) 100%)',
-        color: 'primary.main',
+        background:
+          "linear-gradient(135deg, rgba(98, 0, 234, 0.08) 0%, rgba(179, 136, 255, 0.08) 100%)",
+        color: "primary.main",
         mr: 2,
         // 悬停动画效果
-        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
-        '&:hover': {
-          transform: 'scale(1.1)',
-          background: 'linear-gradient(135deg, rgba(98, 0, 234, 0.12) 0%, rgba(179, 136, 255, 0.12) 100%)',
+        transition: "all 0.2s cubic-bezier(0.4, 0, 0.2, 1)",
+        "&:hover": {
+          transform: "scale(1.1)",
+          background:
+            "linear-gradient(135deg, rgba(98, 0, 234, 0.12) 0%, rgba(179, 136, 255, 0.12) 100%)",
         },
       }}
     >
@@ -54,7 +64,7 @@ const ContactInfo = ({ icon, title, content }: { icon: React.ReactNode; title: s
     </Box>
     {/* 文本内容 */}
     <Box>
-      <Typography variant="subtitle2" sx={{ mb: 0.5, color: 'text.secondary' }}>
+      <Typography variant="subtitle2" sx={{ mb: 0.5, color: "text.secondary" }}>
         {title}
       </Typography>
       <Typography variant="body1" sx={{ fontWeight: 600 }}>
@@ -67,16 +77,16 @@ const ContactInfo = ({ icon, title, content }: { icon: React.ReactNode; title: s
 const Contact = () => {
   // 表单状态管理
   const [formData, setFormData] = useState<ContactForm>({
-    name: '',
-    email: '',
-    message: '',
+    name: "",
+    email: "",
+    message: "",
   });
   const [loading, setLoading] = useState(false);
   // 提示消息状态
   const [snackbar, setSnackbar] = useState({
     open: false,
-    message: '',
-    severity: 'success' as 'success' | 'error',
+    message: "",
+    severity: "success" as "success" | "error",
   });
 
   // 表单提交处理
@@ -86,20 +96,17 @@ const Contact = () => {
 
     try {
       const response = await sendContactMessage(formData);
-      // 成功提示
       setSnackbar({
         open: true,
-        message: response.message,
-        severity: 'success',
+        message: response.data.message || "消息发送成功",
+        severity: "success",
       });
-      // 重置表单
-      setFormData({ name: '', email: '', message: '' });
+      setFormData({ name: "", email: "", message: "" });
     } catch (err) {
-      // 错误提示
       setSnackbar({
         open: true,
-        message: '发送失败，请稍后重试',
-        severity: 'error',
+        message: "发送失败，请稍后重试",
+        severity: "error",
       });
     } finally {
       setLoading(false);
@@ -120,12 +127,12 @@ const Contact = () => {
           variant="h1"
           align="center"
           sx={{
-            fontSize: { xs: '2.5rem', md: '3rem' },
+            fontSize: { xs: "2.5rem", md: "3rem" },
             fontWeight: 800,
             mb: 2,
-            background: 'linear-gradient(135deg, #6200EA 0%, #B388FF 100%)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent',
+            background: "linear-gradient(135deg, #6200EA 0%, #B388FF 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
           }}
         >
           联系我吧
@@ -134,10 +141,10 @@ const Contact = () => {
           variant="body1"
           align="center"
           sx={{
-            color: 'text.secondary',
+            color: "text.secondary",
             maxWidth: 600,
-            mx: 'auto',
-            fontSize: { xs: '1rem', sm: '1.125rem' },
+            mx: "auto",
+            fontSize: { xs: "1rem", sm: "1.125rem" },
             lineHeight: 1.8,
           }}
         >
@@ -155,11 +162,12 @@ const Contact = () => {
             transition={{ duration: 0.6 }}
             sx={{
               p: { xs: 3, md: 4 },
-              height: '100%',
-              background: 'linear-gradient(135deg, rgba(98, 0, 234, 0.03) 0%, rgba(179, 136, 255, 0.03) 100%)',
+              height: "100%",
+              background:
+                "linear-gradient(135deg, rgba(98, 0, 234, 0.03) 0%, rgba(179, 136, 255, 0.03) 100%)",
               borderRadius: 3,
-              border: '1px solid',
-              borderColor: 'divider',
+              border: "1px solid",
+              borderColor: "divider",
             }}
           >
             {/* 联系方式列表 */}
@@ -191,9 +199,10 @@ const Contact = () => {
             elevation={0}
             sx={{
               p: { xs: 3, md: 4 },
-              background: 'linear-gradient(135deg, rgba(98, 0, 234, 0.03) 0%, rgba(179, 136, 255, 0.03) 100%)',
-              border: '1px solid',
-              borderColor: 'divider',
+              background:
+                "linear-gradient(135deg, rgba(98, 0, 234, 0.03) 0%, rgba(179, 136, 255, 0.03) 100%)",
+              border: "1px solid",
+              borderColor: "divider",
               borderRadius: 3,
             }}
           >
@@ -202,8 +211,8 @@ const Contact = () => {
               component="form"
               onSubmit={handleSubmit}
               sx={{
-                display: 'flex',
-                flexDirection: 'column',
+                display: "flex",
+                flexDirection: "column",
                 gap: 3,
               }}
             >
@@ -212,15 +221,17 @@ const Contact = () => {
                 required
                 label="姓名"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 variant="outlined"
                 fullWidth
                 sx={{
-                  '& .MuiOutlinedInput-root': {
+                  "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
-                    '&:hover': {
-                      '& > fieldset': {
-                        borderColor: 'primary.main',
+                    "&:hover": {
+                      "& > fieldset": {
+                        borderColor: "primary.main",
                       },
                     },
                   },
@@ -231,15 +242,17 @@ const Contact = () => {
                 type="email"
                 label="邮箱地址"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 variant="outlined"
                 fullWidth
                 sx={{
-                  '& .MuiOutlinedInput-root': {
+                  "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
-                    '&:hover': {
-                      '& > fieldset': {
-                        borderColor: 'primary.main',
+                    "&:hover": {
+                      "& > fieldset": {
+                        borderColor: "primary.main",
                       },
                     },
                   },
@@ -251,15 +264,17 @@ const Contact = () => {
                 multiline
                 rows={6}
                 value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, message: e.target.value })
+                }
                 variant="outlined"
                 fullWidth
                 sx={{
-                  '& .MuiOutlinedInput-root': {
+                  "& .MuiOutlinedInput-root": {
                     borderRadius: 2,
-                    '&:hover': {
-                      '& > fieldset': {
-                        borderColor: 'primary.main',
+                    "&:hover": {
+                      "& > fieldset": {
+                        borderColor: "primary.main",
                       },
                     },
                   },
@@ -269,15 +284,17 @@ const Contact = () => {
                 type="submit"
                 variant="contained"
                 disabled={loading}
-                endIcon={loading ? <CircularProgress size={20} /> : <SendIcon />}
+                endIcon={
+                  loading ? <CircularProgress size={20} /> : <SendIcon />
+                }
                 sx={{
                   py: 1.5,
                   px: 4,
-                  alignSelf: 'flex-start',
-                  fontSize: '1rem',
+                  alignSelf: "flex-start",
+                  fontSize: "1rem",
                 }}
               >
-                {loading ? '发送中...' : '发送留言'}
+                {loading ? "发送中..." : "发送留言"}
               </Button>
             </Box>
           </Paper>
@@ -289,12 +306,12 @@ const Contact = () => {
         open={snackbar.open}
         autoHideDuration={6000}
         onClose={() => setSnackbar({ ...snackbar, open: false })}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
-        <Alert 
+        <Alert
           severity={snackbar.severity}
           variant="filled"
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           {snackbar.message}
         </Alert>
@@ -303,4 +320,4 @@ const Contact = () => {
   );
 };
 
-export default Contact; 
+export default Contact;
